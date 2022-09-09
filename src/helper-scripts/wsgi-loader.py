@@ -23,7 +23,8 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 
-import sys, os, re, imp, threading, signal, traceback, socket, select, struct, logging, errno
+import sys, os, re, threading, signal, traceback, socket, select, struct, logging, errno
+from importlib.machinery import SourceFileLoader
 import tempfile, json, time
 
 options = {}
@@ -73,7 +74,8 @@ def load_app():
 
 	sys.path.insert(0, os.getcwd())
 	startup_file = options.get('startup_file', 'passenger_wsgi.py')
-	return imp.load_source('passenger_wsgi', startup_file)
+	
+	return SourceFileLoader('passenger_wsgi', startup_file).load_module()
 
 def create_server_socket():
 	global options
